@@ -302,12 +302,12 @@ answer = ollama.generate(context + question)
 **Approach:** Simple keyword and regex-based parsing
 
 **Trade-off:**
-- ✅ Fast to implement (~30 min)
-- ✅ Works for common query patterns
-- ✅ No external NLP dependencies
-- ✅ Predictable behavior
-- ❌ Limited to predefined patterns
-- ❌ Doesn't handle complex phrasing
+- Fast to implement 
+- Works for common query patterns
+- No external NLP dependencies
+- Predictable behavior
+- Limited to predefined patterns
+- Doesn't handle complex phrasing
 
 **Production alternative:** Intent classification using proper NLP (Rasa, spaCy) or LLM-based classification
 
@@ -537,11 +537,11 @@ pytest tests/ -v
 ```
 
 **Current coverage:**
-- ✅ API endpoints (health, query, movie by ID)
-- ✅ Traditional query processing
-- ✅ Agent endpoint basics
-- ✅ Error handling (empty queries, invalid IDs)
-- ✅ Both approaches working independently
+- API endpoints (health, query, movie by ID)
+- Traditional query processing
+- Agent endpoint basics
+- Error handling (empty queries, invalid IDs)
+- Both approaches working independently
 
 **Test results:**
 ```
@@ -624,7 +624,7 @@ movie-rag-api/
 │   ├── database.py          # Database queries
 │   ├── query_processor.py   # Intent extraction
 │   ├── llm_service.py       # Ollama integration
-│   ├── agent_service.py     # LangChain SQL Agent (bonus)
+│   ├── agent_service.py     # LangChain SQL Agent (optional)
 │   └── config.py            # Configuration
 ├── data/
 │   ├── load_data.py         # Dataset loader
