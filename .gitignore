@@ -1,0 +1,4 @@
+app/__pycache__/*
+movie-rag/*
+data/movies.db
+tests/__pycache__/*
