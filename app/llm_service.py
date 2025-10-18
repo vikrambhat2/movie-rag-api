@@ -16,7 +16,6 @@ def generate_response(question: str, movies: List[Dict], intent: str = 'search')
     movie_context = []
     for m in movies[:5]:
         genres_str = ', '.join(m.get('genres', [])) if m.get('genres') else 'N/A'
-        # UPDATE: movie_cast instead of cast
         cast_str = ', '.join(m.get('movie_cast', [])[:3]) if m.get('movie_cast') else 'N/A'
         
         movie_context.append(
@@ -26,8 +25,7 @@ def generate_response(question: str, movies: List[Dict], intent: str = 'search')
             f"  Plot: {m.get('overview', 'No plot available')[:200]}...\n"
             f"  Cast: {cast_str}"
         )
-    
-    # ... rest stays the same
+
     
     context = "\n\n".join(movie_context)
     

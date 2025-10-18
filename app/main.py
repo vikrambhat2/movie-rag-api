@@ -6,7 +6,8 @@ import logging
 from app.database import MovieDB
 from app.query_processor import parse_query
 from app.llm_service import generate_response
-from app.agent_service import query_with_agent
+
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -140,7 +141,7 @@ async def query_movies_agent(request: QueryRequest):
         
         logger.info(f"Agent query: {question}")
         
-        # Import here to avoid loading if not needed
+
         from app.agent_service import query_with_agent
         
         result = query_with_agent(question)
