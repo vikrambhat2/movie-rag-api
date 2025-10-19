@@ -572,9 +572,8 @@ movie-rag-api/
 
 ```
 
-#### Evaluate RAG Pipeline.ipynb
-
-A Jupyter notebook accompanies this project to validate and benchmark the system. It includes end-to-end testing of query parsing, database retrieval, and LLM response generation, as well as a detailed comparison of traditional vs agentic RAG approaches for latency, accuracy, and coverage. This provides a reproducible and measurable way to assess system performance and trade-offs.
+#### Evaluate RAG Pipeline.ipynb 
+- A Jupyter notebook accompanies this project to validate and benchmark the system. It includes end-to-end testing of query parsing, database retrieval, and LLM response generation, as well as a detailed comparison of traditional vs agentic RAG approaches for latency, accuracy, and coverage. This provides a reproducible and measurable way to assess system performance and trade-offs.
 ---
 
 ## Assumptions
