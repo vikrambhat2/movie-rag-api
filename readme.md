@@ -46,7 +46,7 @@ ollama list  # Should show llama3.2
 ### Setup
 ```bash
 # 1. Clone and setup environment
-git clone <your-repo>
+git clone https://github.com/vikrambhat2/movie-rag-api
 cd movie-rag-api
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
@@ -136,11 +136,11 @@ Main endpoint for natural language movie queries using controlled query processi
 - Combined filters: "Recommend comedy films from 2010"
 - Top rated: "What are the best movies?"
 
-**Performance:** ~1-2 seconds
+
 
 ---
 
-### Agentic Approach (Bonus)
+### Agentic Approach 
 
 #### POST /query/agent
 
@@ -163,13 +163,13 @@ Alternative endpoint using LangChain SQL Agent for autonomous query generation.
 }
 ```
 
-**Best for Analytical Queries:**
+**Best for Regular and Analytical Queries:**
 - "How many movies were released in 2015?"
 - "What is the average rating of action movies?"
 - "Which genre has the highest average rating?"
 - "How many movies have a rating above 8?"
 
-**Performance:** ~3-5 seconds (includes agent reasoning)
+
 
 ---
 
@@ -192,9 +192,9 @@ Get database schema information for agent capabilities.
 
 | Aspect | Traditional `/query` | Agent `/query/agent` |
 |--------|---------------------|---------------------|
-| **Query Processing** | Pattern matching | LLM-based analysis |
+| **Query Processing** | Pattern matching | Querying & LLM-based analysis |
 | **SQL Generation** | Predefined queries | Autonomous generation |
-| **Latency** | 1-2s | 3-5s |
+| **Latency** | 1-2s | 1-2s |
 | **Reliability** | High (controlled) | Variable (LLM-generated) |
 | **Flexibility** | Limited patterns | Any SQL-able question |
 | **Safety** | Built-in constraints | Requires guardrails |
@@ -253,18 +253,12 @@ Query: "What's the average rating of action movies from the 2000s?"
 
 ### Why Two Approaches?
 
-**Demonstrates:**
-- Understanding of trade-offs
-- When to use controlled vs autonomous systems
+- Understand the trade-offs between the approaches 
+- Aalyse When to use controlled vs autonomous systems
 - Practical application of agentic AI
 - Production thinking (stable + experimental)
 
-**Production Strategy:**
-- Use traditional for common queries (fast, reliable, 90% of traffic)
-- Use agent for complex analytical questions (flexible, 10% of traffic)
-- Monitor agent performance, promote successful patterns to traditional
 
----
 
 ### RAG Architecture: Database + LLM
 
@@ -327,23 +321,6 @@ def parse_query(query: str) -> Dict:
 
 ---
 
-### LLM: Ollama vs OpenAI
-
-**Chose Ollama because:**
-- Runs locally (data privacy)
-- No API costs
-- Good quality with llama3.2
-- Production-viable for enterprises
-- No external dependencies
-
-**Trade-off:**
-- Response quality slightly below GPT-4
-- Requires local compute resources
-- First query has ~2-3s initialization
-- Depends on hardware (GPU recommended)
-
-
----
 
 ### Database: Denormalized Schema
 
@@ -374,7 +351,6 @@ CREATE TABLE movies (
 - Reduced redundancy
 - Better scaling
 
-**Note:** Renamed `cast` to `movie_cast` to avoid SQL reserved keyword conflict
 
 ---
 
@@ -409,11 +385,9 @@ agent = create_sql_agent(
 
 **Current:** Stateless, single-turn queries
 
-**Why:**
-- ✅ Simpler architecture (no session management)
-- ✅ RESTful design
-- ✅ Core requirement is DB+LLM combination, not conversation state
-- ✅ Easier to scale horizontally
+- Simpler architecture (no session management)
+- RESTful design
+- Easier to scale horizontally
 
 **Next Steps:** Add conversation memory:
 ```python
@@ -433,49 +407,49 @@ User: "What about from 2015?"  # Needs context from previous turn
 
 ## Improve in next version
 
-**Priority 1: Better Query Understanding**
+**1: Better Query Understanding in the Traditional Approach**
 - Use proper NLP for intent classification (Rasa, spaCy)
 - Handle typos and variations (fuzzy matching)
 - Entity extraction using NER
 - Support complex queries: "action movies like Inception but from 2010s"
 - Query understanding feedback loop
 
-**Priority 2: Conversation Memory**
+**2: Conversation Memory**
 - Session management with unique IDs
 - Store conversation history (last 5-10 turns)
 - Include relevant context in LLM prompts
 - Support follow-up queries
 - Context summarization for long conversations
 
-**Priority 3: Caching & Performance**
+**3: Caching & Performance**
 - Cache frequent queries (Redis)
 - Cache LLM responses for identical questions
 - Pre-compute popular recommendations
 - Reduce latency to <500ms for cached queries
 - Monitor cache hit rates
 
-**Priority 4: Query Refinement Loop**
+**4: Query Refinement Loop**
 - If no results, automatically relax constraints
 - Suggest alternative queries
 - "Did you mean..." functionality
 - Feedback-driven query improvement
 - A/B test query strategies
 
-**Priority 5: Enhanced Agent Capabilities**
+**5: Enhanced Agent Capabilities**
 - Multi-step reasoning for complex questions
 - Tool use (external APIs for trailers, reviews, ratings)
 - Query cost optimization
 - Result caching for agent queries
 - Hybrid: use traditional first, agent as fallback
 
-**Priority 6: Enhanced Responses**
+**6: Enhanced Responses**
 - Streaming responses (SSE) for better UX
 - Include movie posters/images (TMDb API)
 - Provide similar movie recommendations
 - Add user ratings/reviews integration
 - Explain why movies were recommended
 
-**Priority 7: Testing & Monitoring**
+**7: Testing & Monitoring**
 - Comprehensive test coverage (>80%)
 - Integration tests for full pipeline
 - Performance benchmarks
@@ -483,7 +457,7 @@ User: "What about from 2015?"  # Needs context from previous turn
 - User feedback collection
 - A/B testing framework
 
-**Priority 8: Production Readiness**
+**8: Production Readiness**
 - Rate limiting per user/IP
 - Authentication/authorization
 - Database connection pooling
@@ -493,39 +467,6 @@ User: "What about from 2015?"  # Needs context from previous turn
 - CI/CD pipeline
 - Deployment configuration (K8s)
 - Monitoring and alerting (Prometheus, Grafana)
-
----
-
-## Problems Encountered & Solutions
-
-**Problem 1: TMDB Dataset Column Mismatch**
-- Credits CSV uses `movie_id` instead of `id`
-- **Solution:** Renamed column during merge: `credits.rename(columns={'movie_id': 'id'})`
-
-**Problem 2: SQL Reserved Keyword**
-- `cast` is a reserved SQL keyword, causing syntax errors
-- **Solution:** Renamed column to `movie_cast` in database schema
-
-**Problem 3: Genre Matching**
-- Users say "sci-fi" but database has "Science Fiction"
-- **Solution:** Added mapping in query processor
-
-**Problem 4: LLM Token Limits**
-- Full movie data for 5 movies exceeds comfortable context
-- **Solution:** Truncate overviews to 200 chars, limit cast to 3 actors
-
-**Problem 5: Query Keyword Extraction**
-- Pattern matching extracted irrelevant words ("tell me about inception" → extracted "tell me inception")
-- **Solution:** Improved stop word filtering and regex cleaning
-
-**Problem 6: Agent Verbose Output**
-- Agent included reasoning steps and SQL queries in responses
-- **Solution:** Prompt engineering: "Answer briefly, do not include tool calling information or SQL queries"
-
-**Problem 7: Empty Query Results**
-- Strict filters (e.g., "horror movies from 1950") return nothing
-- **Solution:** LLM generates helpful "no results" message, suggests broadening search
-- **Better solution:** Automatic query relaxation (would add with more time)
 
 ---
 
@@ -550,7 +491,7 @@ pytest tests/ -v
 - 3 agent endpoint tests
 ```
 
-**Not covered (POC scope):**
+**Not covered:**
 - Database edge cases
 - Concurrent request handling
 - Performance under load
@@ -569,12 +510,9 @@ Traditional endpoint:
 
 Agent endpoint:
 - First request: 4-6s (model + agent initialization)
-- Subsequent requests: 3-5s (agent reasoning overhead)
+- Subsequent requests: 1-2s (agent reasoning overhead)
 - Database queries: <50ms
 
-**Bottlenecks:**
-- Traditional: LLM inference time (~1s)
-- Agent: Agent reasoning + LLM inference (~3s)
 
 **Scaling considerations:**
 - Database: Add read replicas, caching, indexes
@@ -658,13 +596,3 @@ movie-rag-api/
 - FastAPI for excellent API framework
 
 ---
-
-## License
-
-MIT
-
----
-
-## Contact
-
-For questions about this implementation, please see the GitHub repository.
