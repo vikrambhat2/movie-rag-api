@@ -90,10 +90,10 @@ curl -X POST "http://localhost:8000/query/agent" \
 
 ## API Endpoints
 
-### Traditional Approach
-
-#### POST /query
-
+### 1. Traditional Approach
+```
+POST /query
+```
 Main endpoint for natural language movie queries using controlled query processing.
 
 **Request:**
@@ -138,9 +138,11 @@ Main endpoint for natural language movie queries using controlled query processi
 
 ---
 
-### Agentic Approach 
+### 2. Agentic Approach 
 
-#### POST /query/agent
+```
+POST /query/agent
+```
 
 Alternative endpoint using LangChain SQL Agent for autonomous query generation.
 
@@ -173,13 +175,23 @@ Alternative endpoint using LangChain SQL Agent for autonomous query generation.
 
 ### Other Endpoints
 
-#### GET /movies/{id}
+#### 3.  
+```
+GET /movies/{id}
+```
 Get detailed information about a specific movie.
 
-#### GET /health
+#### 4. 
+ ```
+ GET /health
+ ```
 Health check endpoint.
 
-#### GET /agent/info
+#### 5. 
+
+```
+GET /agent/info
+```
 Get database schema information for agent capabilities.
 
 ---
