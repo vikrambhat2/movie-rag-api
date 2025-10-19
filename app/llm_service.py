@@ -6,37 +6,30 @@ import logging
 logger = logging.getLogger(__name__)
 
 def generate_response(question: str, movies: List[Dict], intent: str = 'search') -> str:
-    """
-    Generate natural language response using Ollama
-    """
     if not movies:
-        return "I couldn't find any movies matching your query. Try being more specific or adjusting your criteria."
-    
-    # Format movie data
-    movie_context = []
+        return "I couldn't find any movies matching your query. Try being more specific."
+
+    # Prepare context for up to 5 movies
+    context_lines = []
     for m in movies[:5]:
-        genres_str = ', '.join(m.get('genres', [])) if m.get('genres') else 'N/A'
-        cast_str = ', '.join(m.get('movie_cast', [])[:3]) if m.get('movie_cast') else 'N/A'
-        
-        movie_context.append(
-            f"- {m['title']} ({m.get('year', 'N/A')})\n"
-            f"  Genres: {genres_str}\n"
-            f"  Rating: {m.get('vote_average', 'N/A')}/10\n"
-            f"  Plot: {m.get('overview', 'No plot available')[:200]}...\n"
-            f"  Cast: {cast_str}"
+        genres = ', '.join(m.get('genres', [])) or 'N/A'
+        cast = ', '.join(m.get('movie_cast', [])[:3]) or 'N/A'
+        context_lines.append(
+            f"- {m['title']} ({m.get('year', 'N/A')}) | Rating: {m.get('vote_average', 'N/A')}/10\n"
+            f"  Genres: {genres} | Plot: {m.get('overview', 'No plot')[:200]}...\n"
+            f"  Cast: {cast}"
         )
 
-    
-    context = "\n\n".join(movie_context)
-    
-    # Adjust instruction based on intent
-    if intent == 'describe':
-        instruction = "Provide a concise description of the movie(s), highlighting key details."
-    elif intent == 'recommend':
-        instruction = "Recommend these movies naturally, explaining why they match the query."
-    else:
-        instruction = "Answer the question conversationally using the movie data."
-    
+    context = "\n\n".join(context_lines)
+
+    # Instruction based on intent
+    instructions = {
+        'describe': "Give a concise description highlighting key details.",
+        'recommend': "Recommend these movies naturally, explaining why they fit the query.",
+        'search': "Answer conversationally using the movie data."
+    }
+    instruction = instructions.get(intent, instructions['search'])
+
     prompt = f"""You are a helpful movie assistant. {instruction}
 
 Movie Data:
@@ -44,29 +37,16 @@ Movie Data:
 
 User Question: {question}
 
-Provide a friendly, conversational response (2-3 sentences). Use only the information provided. Do not make up information."""
-    
+Provide a friendly 2-3 sentence response using only the info above."""
+
     try:
-        response = ollama.chat(
+        resp = ollama.chat(
             model=OLLAMA_MODEL,
-            messages=[{
-                'role': 'user',
-                'content': prompt
-            }],
-            options={
-                'temperature': 0.7,
-                'num_predict': 150
-            }
+            messages=[{'role': 'user', 'content': prompt}],
+            options={'temperature': 0.7, 'num_predict': 150}
         )
-        
-        return response['message']['content'].strip()
-        
+        return resp['message']['content'].strip()
     except Exception as e:
         logger.error(f"Ollama error: {e}")
-        # Fallback response
-        top_movie = movies[0]
-        return (
-            f"I found {len(movies)} movie(s) matching your query. "
-            f"The top result is '{top_movie['title']}' ({top_movie.get('year', 'N/A')}) "
-            f"with a rating of {top_movie.get('vote_average', 'N/A')}/10."
-        )
+        top = movies[0]
+        return f"I found {len(movies)} movie(s). Top result: '{top['title']}' ({top.get('year','N/A')}) with rating {top.get('vote_average','N/A')}/10."

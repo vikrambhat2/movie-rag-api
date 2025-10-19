@@ -136,8 +136,6 @@ Main endpoint for natural language movie queries using controlled query processi
 - Combined filters: "Recommend comedy films from 2010"
 - Top rated: "What are the best movies?"
 
-
-
 ---
 
 ### Agentic Approach 
@@ -539,12 +537,12 @@ Agent endpoint:
 
 ## Tech Stack
 
-- **API:** FastAPI 0.104.1
+- **API:** FastAPI 
 - **LLM:** Ollama (llama3.2)
-- **Agent:** LangChain 0.1.0 with SQL Agent
+- **Agent:** LangChain with SQL Agent
 - **Database:** SQLite3
-- **Data Processing:** Pandas 2.1.3
-- **Testing:** pytest 7.4.3
+- **Data Processing:** Pandas 
+- **Testing:** pytest 
 - **Python:** 3.11+
 
 ---
@@ -570,10 +568,13 @@ movie-rag-api/
 │   └── raw/                 # Raw CSV files
 ├── tests/
 │   └── test_api.py          # API tests
-└── examples/
-    └── sample_requests.json # Example queries
+└── Evaluate RAG Pipeline.ipynb
+
 ```
 
+#### Evaluate RAG Pipeline.ipynb
+
+A Jupyter notebook accompanies this project to validate and benchmark the system. It includes end-to-end testing of query parsing, database retrieval, and LLM response generation, as well as a detailed comparison of traditional vs agentic RAG approaches for latency, accuracy, and coverage. This provides a reproducible and measurable way to assess system performance and trade-offs.
 ---
 
 ## Assumptions

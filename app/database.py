@@ -59,7 +59,7 @@ class MovieDB:
         
         # Parse JSON fields
         for movie in results:
-            for field in ['genres', 'cast']:
+            for field in ['genres', 'movie_cast']:
                 if movie.get(field):
                     try:
                         movie[field] = json.loads(movie[field])
