@@ -419,8 +419,6 @@ User: "What about from 2015?"  # Needs context from previous turn
 
 **1: Better Query Understanding in the Traditional Approach**
 - Use proper NLP for intent classification (Rasa, spaCy)
-- Handle typos and variations (fuzzy matching)
-- Entity extraction using NER
 - Support complex queries: "action movies like Inception but from 2010s"
 - Query understanding feedback loop
 
@@ -433,13 +431,8 @@ User: "What about from 2015?"  # Needs context from previous turn
 
 **3: Caching & Performance**
 - Cache frequent queries (Redis)
-- Cache LLM responses for identical questions
-- Pre-compute popular recommendations
-- Reduce latency to <500ms for cached queries
-- Monitor cache hit rates
 
 **4: Query Refinement Loop**
-- If no results, automatically relax constraints
 - Suggest alternative queries
 - "Did you mean..." functionality
 - Feedback-driven query improvement
@@ -460,10 +453,8 @@ User: "What about from 2015?"  # Needs context from previous turn
 - Explain why movies were recommended
 
 **7: Testing & Monitoring**
-- Comprehensive test coverage (>80%)
-- Integration tests for full pipeline
+- Comprehensive test coverage
 - Performance benchmarks
-- Query analytics and logging
 - User feedback collection
 - A/B testing framework
 
@@ -475,8 +466,6 @@ User: "What about from 2015?"  # Needs context from previous turn
 - Proper error handling and retries
 - Containerization (Docker)
 - CI/CD pipeline
-- Deployment configuration (K8s)
-- Monitoring and alerting (Prometheus, Grafana)
 
 ---
 
